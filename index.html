@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeonGuard VPN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Rajdhani', sans-serif;
+        background-color: #050505;
+        color: #e0f2fe;
+        overflow: hidden; /* Prevent scrolling on the main body for app-feel */
+      }
+      .font-display {
+        font-family: 'Orbitron', sans-serif;
+      }
+      /* Custom scrollbar for server list */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f172a; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155; 
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #475569; 
+      }
+      
+      .neon-glow {
+        box-shadow: 0 0 10px rgba(6, 182, 212, 0.5), 0 0 20px rgba(6, 182, 212, 0.3);
+      }
+      .neon-glow-active {
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.6), 0 0 30px rgba(16, 185, 129, 0.4);
+      }
+      .neon-text {
+        text-shadow: 0 0 5px rgba(6, 182, 212, 0.8);
+      }
+      .hologram-grid {
+        background-image: linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
+        background-size: 20px 20px;
+        mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.559.0",
+    "d3": "https://esm.sh/d3@^7.9.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
