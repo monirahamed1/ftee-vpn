@@ -10,14 +10,26 @@ interface ConnectionButtonProps {
 const ConnectionButton: React.FC<ConnectionButtonProps> = ({ state, onClick }) => {
   const isConnected = state === ConnectionState.CONNECTED;
   const isConnecting = state === ConnectionState.CONNECTING || state === ConnectionState.DISCONNECTING;
+  const isAttempting = state === ConnectionState.CONNECTING;
 
   // We use inline styles for dynamic colors to bridge the gap between Tailwind classes and CSS variables for complex states
   
   return (
     <div className="relative group">
+      {/* Connecting Ripple Animation - Only visible when attempting connection */}
+      {isAttempting && (
+        <div 
+          className="absolute -inset-1 rounded-full opacity-30 blur-md animate-ping"
+          style={{
+             backgroundColor: 'var(--theme-primary)',
+             animationDuration: '1.5s'
+          }}
+        ></div>
+      )}
+
       {/* Outer Glow Ring */}
       <div 
-        className={`absolute -inset-4 rounded-full blur-xl transition-all duration-1000 ${isConnecting ? 'animate-pulse' : ''}`}
+        className={`absolute -inset-4 rounded-full blur-xl transition-all duration-1000 ${isAttempting ? 'animate-pulse scale-105 opacity-80' : 'opacity-50 scale-100'}`}
         style={{
            backgroundColor: isConnected ? 'rgba(16, 185, 129, 0.3)' : 'var(--theme-glow)'
         }}

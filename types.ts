@@ -1,3 +1,4 @@
+
 export enum ConnectionState {
   DISCONNECTED = 'DISCONNECTED',
   CONNECTING = 'CONNECTING',
@@ -26,6 +27,12 @@ export interface ConnectionStats {
   protocol: string;
 }
 
+export interface LifetimeStats {
+  totalDuration: number; // seconds
+  totalDataTransfer: number; // MB
+  successfulConnections: number;
+}
+
 export interface AIMessage {
   type: 'info' | 'warning' | 'success';
   text: string;
@@ -45,4 +52,8 @@ export interface AppSettings {
   killSwitch: boolean;
   smartRouting: boolean;
   density: 'compact' | 'spacious';
+  monetization: boolean;
+  devMode: boolean;
+  autoReconnect: boolean;
+  reconnectDelay: number; // seconds
 }

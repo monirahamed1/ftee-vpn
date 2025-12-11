@@ -11,14 +11,14 @@ interface CyberGlobeProps {
 const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation, themeColor = '#22d3ee' }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const currentSpeed = useRef(0.2); // Store speed in ref to persist across renders without re-triggering effect
 
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
 
     const width = containerRef.current.clientWidth;
     const height = width; // Keep it square
-    const sensitivity = 75;
-
+    
     const svg = d3.select(svgRef.current)
       .attr('width', width)
       .attr('height', height);
@@ -64,7 +64,7 @@ const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation
     const g = svg.append('g');
 
     // Draw the points
-    const nodes = g.selectAll('path.node')
+    g.selectAll('path.node')
       .data(points)
       .enter()
       .append('path')
@@ -79,9 +79,11 @@ const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation
     let rotation = [0, -20];
     
     const animate = () => {
-      // Rotate the globe
-      const rotateSpeed = connectionState === ConnectionState.CONNECTED ? 0.5 : 0.2;
-      rotation[0] += rotateSpeed;
+      // Smoothly interpolate speed
+      const targetSpeed = connectionState === ConnectionState.CONNECTED ? 0.8 : 0.2;
+      currentSpeed.current += (targetSpeed - currentSpeed.current) * 0.05;
+      
+      rotation[0] += currentSpeed.current;
       projection.rotate([rotation[0], rotation[1]]);
 
       // Update paths
@@ -97,8 +99,13 @@ const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation
         svg.selectAll('.target-marker').remove();
         
         if (center) {
+           // Only draw if on the visible side of the globe
+           // D3 geo projection clipping usually handles the path, but we are drawing manual circles
+           // Simple check: distance from center < radius
            const distance = Math.sqrt(Math.pow(center[0] - width/2, 2) + Math.pow(center[1] - height/2, 2));
-           if (distance < width/2) {
+           
+           // The globe radius is (width / 2 - 20)
+           if (distance < (width / 2 - 20)) {
              svg.append('circle')
                .attr('class', 'target-marker')
                .attr('cx', center[0])
@@ -113,7 +120,7 @@ const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation
                .attr('class', 'target-marker')
                .attr('cx', center[0])
                .attr('cy', center[1])
-               .attr('r', 15)
+               .attr('r', 15 + Math.sin(Date.now() / 200) * 3) // Pulse effect
                .attr('fill', 'none')
                .attr('stroke', '#10b981')
                .style('opacity', 0.5)

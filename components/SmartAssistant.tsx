@@ -6,9 +6,10 @@ import { analyzeConnectionSecurity } from '../services/geminiService';
 interface SmartAssistantProps {
   connectionState: ConnectionState;
   server: ServerLocation | null;
+  protocol: string;
 }
 
-const SmartAssistant: React.FC<SmartAssistantProps> = ({ connectionState, server }) => {
+const SmartAssistant: React.FC<SmartAssistantProps> = ({ connectionState, server, protocol }) => {
   const [message, setMessage] = useState<string>("SYSTEM STANDBY. READY FOR CONNECTION.");
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +19,7 @@ const SmartAssistant: React.FC<SmartAssistantProps> = ({ connectionState, server
       setMessage("RUNNING DIAGNOSTICS...");
       
       const timer = setTimeout(async () => {
-        const result = await analyzeConnectionSecurity(server, "WireGuard");
+        const result = await analyzeConnectionSecurity(server, protocol);
         setMessage(result);
         setLoading(false);
       }, 1500); // Simulate scan delay for effect
@@ -27,9 +28,9 @@ const SmartAssistant: React.FC<SmartAssistantProps> = ({ connectionState, server
     } else if (connectionState === ConnectionState.DISCONNECTED) {
       setMessage("UNSECURED NETWORK DETECTED. RECOMMEND CONNECTION IMMEDIATELY.");
     } else if (connectionState === ConnectionState.CONNECTING) {
-      setMessage("NEGOTIATING ENCRYPTION KEYS...");
+      setMessage(`NEGOTIATING ${protocol.toUpperCase()} KEYS...`);
     }
-  }, [connectionState, server]);
+  }, [connectionState, server, protocol]);
 
   return (
     <div className="mx-4 mt-6 mb-2">

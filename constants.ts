@@ -44,6 +44,8 @@ const BASE_CITIES = [
   { code: 'ro-buc', country: 'Romania', city: 'Bucharest', cc: 'RO', coords: [26.1025, 44.4268] },
   { code: 'ua-kyi', country: 'Ukraine', city: 'Kyiv', cc: 'UA', coords: [30.5238, 50.4501] },
   { code: 'fi-hel', country: 'Finland', city: 'Helsinki', cc: 'FI', coords: [24.9384, 60.1699] },
+  { code: 'cz-pra', country: 'Czech Republic', city: 'Prague', cc: 'CZ', coords: [14.4378, 50.0755] },
+  { code: 'at-vie', country: 'Austria', city: 'Vienna', cc: 'AT', coords: [16.3738, 48.2082] },
 
   // Asia
   { code: 'jp-tok', country: 'Japan', city: 'Tokyo', cc: 'JP', coords: [139.6917, 35.6895] },
@@ -57,6 +59,8 @@ const BASE_CITIES = [
   { code: 'th-ban', country: 'Thailand', city: 'Bangkok', cc: 'TH', coords: [100.5018, 13.7563] },
   { code: 'vn-han', country: 'Vietnam', city: 'Hanoi', cc: 'VN', coords: [105.8342, 21.0278] },
   { code: 'my-kua', country: 'Malaysia', city: 'Kuala Lumpur', cc: 'MY', coords: [101.6869, 3.1390] },
+  { code: 'ph-man', country: 'Philippines', city: 'Manila', cc: 'PH', coords: [120.9842, 14.5995] },
+  { code: 'tw-tai', country: 'Taiwan', city: 'Taipei', cc: 'TW', coords: [121.5654, 25.0330] },
 
   // Oceania
   { code: 'au-syd', country: 'Australia', city: 'Sydney', cc: 'AU', coords: [151.2093, -33.8688] },
@@ -78,6 +82,8 @@ const BASE_CITIES = [
   { code: 'eg-cai', country: 'Egypt', city: 'Cairo', cc: 'EG', coords: [31.2357, 30.0444] },
   { code: 'ae-dub', country: 'UAE', city: 'Dubai', cc: 'AE', coords: [55.2708, 25.2048] },
   { code: 'tr-ist', country: 'Turkey', city: 'Istanbul', cc: 'TR', coords: [28.9784, 41.0082] },
+  { code: 'il-tel', country: 'Israel', city: 'Tel Aviv', cc: 'IL', coords: [34.7818, 32.0853] },
+  { code: 'sa-rya', country: 'Saudi Arabia', city: 'Riyadh', cc: 'SA', coords: [46.6753, 24.7136] },
 ];
 
 function generateServerList(targetCount: number): ServerLocation[] {
@@ -86,7 +92,7 @@ function generateServerList(targetCount: number): ServerLocation[] {
   // Ensure we cycle through cities enough times to hit target
   const locationsPerCity = Math.ceil(remainingCount / BASE_CITIES.length);
   
-  BASE_CITIES.forEach(city => {
+  BASE_CITIES.forEach((city, cityIdx) => {
     for (let i = 0; i < locationsPerCity; i++) {
       // Add randomness to stats to make them feel real
       const load = Math.floor(Math.random() * 85) + 5;
@@ -97,13 +103,13 @@ function generateServerList(targetCount: number): ServerLocation[] {
       const latency = Math.max(12, baseLatency + latencyJitter + (i * 3)); 
       
       servers.push({
-        id: `${city.code}-${i+1}`,
+        id: `${city.code}-${i+1}-${cityIdx}`,
         name: city.country,
         city: `${city.city} Proxy #${i+1}`,
         countryCode: city.cc,
         latency: latency,
         load: load,
-        coordinates: [city.coords[0], city.coords[1]], 
+        coordinates: [city.coords[0] + (Math.random() * 0.1 - 0.05), city.coords[1] + (Math.random() * 0.1 - 0.05)], 
         premium: false 
       });
       
@@ -115,8 +121,8 @@ function generateServerList(targetCount: number): ServerLocation[] {
   return servers;
 }
 
-// Generate 1000 Servers (including the high speed ones)
-export const SERVER_LOCATIONS: ServerLocation[] = generateServerList(1000);
+// Generate 1024 Servers
+export const SERVER_LOCATIONS: ServerLocation[] = generateServerList(1024);
 
 export const MOCK_IPS = {
   DISCONNECTED: '192.168.0.1 (Exposed)',
@@ -128,4 +134,11 @@ export const APP_THEMES = [
   { id: 'emerald', name: 'Hacker Green', primary: '#34d399', secondary: '#059669' },
   { id: 'violet', name: 'Nebula Purple', primary: '#a78bfa', secondary: '#7c3aed' },
   { id: 'rose', name: 'Neon Rose', primary: '#fb7185', secondary: '#e11d48' },
+  { id: 'python', name: 'Pythonic', primary: '#FFD43B', secondary: '#3776AB' },
+  // New Themes
+  { id: 'amber', name: 'Solar Flare', primary: '#fbbf24', secondary: '#d97706' },
+  { id: 'fuchsia', name: 'Neon Tokyo', primary: '#e879f9', secondary: '#c026d3' },
+  { id: 'sky', name: 'Arctic Frost', primary: '#38bdf8', secondary: '#0284c7' },
+  { id: 'lime', name: 'Biohazard', primary: '#a3e635', secondary: '#65a30d' },
+  { id: 'slate', name: 'Stealth Ops', primary: '#94a3b8', secondary: '#475569' },
 ];
