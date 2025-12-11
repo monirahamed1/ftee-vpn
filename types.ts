@@ -14,6 +14,7 @@ export interface ServerLocation {
   load: number; // percentage
   coordinates: [number, number]; // [longitude, latitude]
   premium?: boolean;
+  highSpeed?: boolean;
 }
 
 export interface ConnectionStats {
@@ -22,10 +23,26 @@ export interface ConnectionStats {
   dataUsed: number; // MB
   duration: number; // seconds
   ipAddress: string;
-  protocol: 'WireGuard' | 'OpenVPN' | 'IKEv2';
+  protocol: string;
 }
 
 export interface AIMessage {
   type: 'info' | 'warning' | 'success';
   text: string;
+}
+
+export interface AppTheme {
+  id: string;
+  name: string;
+  primary: string; // Hex for primary accent
+  secondary: string; // Hex for secondary/dim accent
+}
+
+export interface AppSettings {
+  haptics: boolean;
+  language: string;
+  protocol: string;
+  killSwitch: boolean;
+  smartRouting: boolean;
+  density: 'compact' | 'spacious';
 }

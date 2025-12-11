@@ -5,9 +5,10 @@ import { ConnectionState, ServerLocation } from '../types';
 interface CyberGlobeProps {
   connectionState: ConnectionState;
   targetLocation: ServerLocation | null;
+  themeColor?: string;
 }
 
-const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation }) => {
+const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation, themeColor = '#22d3ee' }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -38,7 +39,7 @@ const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation
       .attr('class', 'sphere')
       .attr('d', path)
       .attr('fill', '#0f172a') // Dark slate background
-      .attr('stroke', '#0ea5e9') // Sky blue rim
+      .attr('stroke', themeColor) // Theme color rim
       .attr('stroke-width', 1.5)
       .style('opacity', 0.5);
 
@@ -69,7 +70,7 @@ const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation
       .append('path')
       .attr('class', 'node')
       .attr('d', path as any)
-      .attr('fill', (d, i) => i % 5 === 0 ? '#10b981' : '#0ea5e9') // Mix of emerald and sky blue
+      .attr('fill', (d, i) => i % 5 === 0 ? '#10b981' : themeColor) // Mix of emerald and theme
       .attr('r', 2)
       .style('opacity', 0.6);
 
@@ -89,19 +90,12 @@ const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation
 
       // Draw connection arc if connected
       if (connectionState === ConnectionState.CONNECTED && targetLocation) {
-        // User (assumed at 0,0 for demo or rough location) -> Target
-        // We will just rotate the globe so the target is visible eventually, 
-        // but for now let's draw a "pulse" at the target location if it's visible.
         
-        // Find visible points logic is complex, simplify by just projecting the target
         const center = projection(targetLocation.coordinates as [number, number]);
         
         // Remove old marker
         svg.selectAll('.target-marker').remove();
         
-        // Only draw if visible (roughly on the front side)
-        // d3-geo projection returns null if point is clipped? No, need to check clip.
-        // Simple check: distance from center of circle.
         if (center) {
            const distance = Math.sqrt(Math.pow(center[0] - width/2, 2) + Math.pow(center[1] - height/2, 2));
            if (distance < width/2) {
@@ -136,7 +130,7 @@ const CyberGlobe: React.FC<CyberGlobeProps> = ({ connectionState, targetLocation
     return () => {
       cancelAnimationFrame(timer);
     };
-  }, [connectionState, targetLocation]);
+  }, [connectionState, targetLocation, themeColor]);
 
   return (
     <div ref={containerRef} className="w-full h-full flex items-center justify-center relative">

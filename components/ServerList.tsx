@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Signal, Star } from 'lucide-react';
+import { MapPin, Signal, Star, Zap } from 'lucide-react';
 import { ServerLocation } from '../types';
 
 interface ServerListProps {
@@ -41,19 +41,23 @@ const ServerList: React.FC<ServerListProps> = ({ servers, selectedServer, onSele
                 }}
                 className={`w-full p-4 rounded-xl border flex items-center justify-between transition-all duration-200 group
                   ${isSelected 
-                    ? 'bg-emerald-950/20 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
-                    : 'bg-slate-900/40 border-slate-800 hover:border-cyan-500/30 hover:bg-slate-800/60'
+                    ? 'bg-slate-800/60 border-[var(--theme-primary)] shadow-[0_0_15px_var(--theme-glow)]' 
+                    : 'bg-slate-900/40 border-slate-800 hover:border-[var(--theme-primary)] hover:bg-slate-800/60'
                   }
                 `}
               >
                 <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-lg ${isSelected ? 'bg-emerald-500/10' : 'bg-slate-800'}`}>
-                    {/* Placeholder for Flag - using generic icon */}
-                    <MapPin size={20} className={isSelected ? 'text-emerald-400' : 'text-slate-400'} />
+                  <div className={`p-2 rounded-lg ${isSelected ? 'bg-[var(--theme-primary)]/10' : 'bg-slate-800'}`}>
+                    {server.highSpeed ? (
+                       <Zap size={20} className={isSelected ? 'text-[var(--theme-primary)]' : 'text-amber-400'} />
+                    ) : (
+                       <MapPin size={20} className={isSelected ? 'text-[var(--theme-primary)]' : 'text-slate-400'} />
+                    )}
                   </div>
                   <div className="text-left">
-                    <div className={`font-bold ${isSelected ? 'text-emerald-300' : 'text-slate-200'}`}>
+                    <div className={`font-bold flex items-center gap-2 ${isSelected ? 'text-[var(--theme-primary)]' : 'text-slate-200'}`}>
                       {server.city}
+                      {server.highSpeed && <span className="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded uppercase tracking-wider">Turbo</span>}
                     </div>
                     <div className="text-xs text-slate-500 uppercase tracking-wider">{server.name}</div>
                   </div>
@@ -65,7 +69,7 @@ const ServerList: React.FC<ServerListProps> = ({ servers, selectedServer, onSele
                   )}
                   <div className="flex flex-col items-end">
                     <div className="flex items-center gap-1">
-                      <Signal size={14} className={server.latency < 50 ? 'text-emerald-400' : server.latency < 100 ? 'text-yellow-400' : 'text-red-400'} />
+                      <Signal size={14} className={server.latency < 25 ? 'text-emerald-400' : server.latency < 100 ? 'text-yellow-400' : 'text-red-400'} />
                       <span className="text-xs text-slate-400 font-mono">{server.latency}ms</span>
                     </div>
                     <span className="text-[10px] text-slate-600">LOAD {server.load}%</span>

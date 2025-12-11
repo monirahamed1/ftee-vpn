@@ -3,10 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NeonGuard VPN</title>
+    <title>M Ai VPN</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+      :root {
+        --theme-primary: #22d3ee;
+        --theme-secondary: #0891b2;
+        --theme-glow: rgba(34, 211, 238, 0.5);
+      }
       body {
         font-family: 'Rajdhani', sans-serif;
         background-color: #050505;
@@ -38,7 +43,7 @@
         box-shadow: 0 0 15px rgba(16, 185, 129, 0.6), 0 0 30px rgba(16, 185, 129, 0.4);
       }
       .neon-text {
-        text-shadow: 0 0 5px rgba(6, 182, 212, 0.8);
+        text-shadow: 0 0 5px var(--theme-primary);
       }
       .hologram-grid {
         background-image: linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),

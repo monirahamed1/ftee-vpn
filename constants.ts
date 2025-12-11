@@ -1,86 +1,131 @@
 import { ServerLocation } from './types';
 
-export const SERVER_LOCATIONS: ServerLocation[] = [
+// High Speed "Turbo" Servers
+const HIGH_SPEED_SERVERS: ServerLocation[] = [
+  { id: 'turbo-1', name: 'United States', city: 'New York (Turbo)', countryCode: 'US', latency: 8, load: 12, coordinates: [-74.006, 40.7128], premium: false, highSpeed: true },
+  { id: 'turbo-2', name: 'United Kingdom', city: 'London (Turbo)', countryCode: 'GB', latency: 14, load: 18, coordinates: [-0.1276, 51.5074], premium: false, highSpeed: true },
+  { id: 'turbo-3', name: 'Singapore', city: 'Singapore (Turbo)', countryCode: 'SG', latency: 18, load: 20, coordinates: [103.8198, 1.3521], premium: false, highSpeed: true },
+  { id: 'turbo-4', name: 'Germany', city: 'Frankfurt (Turbo)', countryCode: 'DE', latency: 15, load: 22, coordinates: [8.6821, 50.1109], premium: false, highSpeed: true },
+  { id: 'turbo-5', name: 'Japan', city: 'Tokyo (Turbo)', countryCode: 'JP', latency: 20, load: 15, coordinates: [139.6917, 35.6895], premium: false, highSpeed: true },
+];
+
+// Base list of major city hubs to generate servers from
+const BASE_CITIES = [
   // North America
-  { id: 'us-ny', name: 'United States', city: 'New York', countryCode: 'US', latency: 24, load: 45, coordinates: [-74.006, 40.7128], premium: false },
-  { id: 'us-la', name: 'United States', city: 'Los Angeles', countryCode: 'US', latency: 65, load: 52, coordinates: [-118.2437, 34.0522], premium: false },
-  { id: 'us-chi', name: 'United States', city: 'Chicago', countryCode: 'US', latency: 45, load: 38, coordinates: [-87.6298, 41.8781], premium: false },
-  { id: 'us-mia', name: 'United States', city: 'Miami', countryCode: 'US', latency: 50, load: 60, coordinates: [-80.1918, 25.7617], premium: false },
-  { id: 'us-dal', name: 'United States', city: 'Dallas', countryCode: 'US', latency: 55, load: 42, coordinates: [-96.7970, 32.7767], premium: false },
-  { id: 'us-sea', name: 'United States', city: 'Seattle', countryCode: 'US', latency: 70, load: 35, coordinates: [-122.3321, 47.6062], premium: false },
-  { id: 'us-sf', name: 'United States', city: 'San Francisco', countryCode: 'US', latency: 68, load: 48, coordinates: [-122.4194, 37.7749], premium: false },
-  { id: 'us-atl', name: 'United States', city: 'Atlanta', countryCode: 'US', latency: 48, load: 40, coordinates: [-84.3880, 33.7490], premium: false },
-  { id: 'us-den', name: 'United States', city: 'Denver', countryCode: 'US', latency: 60, load: 30, coordinates: [-104.9903, 39.7392], premium: false },
-  { id: 'us-wdc', name: 'United States', city: 'Washington DC', countryCode: 'US', latency: 28, load: 55, coordinates: [-77.0369, 38.9072], premium: false },
-  { id: 'us-bos', name: 'United States', city: 'Boston', countryCode: 'US', latency: 30, load: 42, coordinates: [-71.0589, 42.3601], premium: false },
-  { id: 'us-hou', name: 'United States', city: 'Houston', countryCode: 'US', latency: 52, load: 46, coordinates: [-95.3698, 29.7604], premium: false },
-  { id: 'us-phx', name: 'United States', city: 'Phoenix', countryCode: 'US', latency: 62, load: 33, coordinates: [-112.0740, 33.4484], premium: false },
-  { id: 'ca-tor', name: 'Canada', city: 'Toronto', countryCode: 'CA', latency: 35, load: 44, coordinates: [-79.3832, 43.6532], premium: false },
-  { id: 'ca-van', name: 'Canada', city: 'Vancouver', countryCode: 'CA', latency: 72, load: 36, coordinates: [-123.1207, 49.2827], premium: false },
-  { id: 'ca-mtl', name: 'Canada', city: 'Montreal', countryCode: 'CA', latency: 38, load: 41, coordinates: [-73.5673, 45.5017], premium: false },
-  { id: 'mx-mex', name: 'Mexico', city: 'Mexico City', countryCode: 'MX', latency: 80, load: 58, coordinates: [-99.1332, 19.4326], premium: false },
-
+  { code: 'us-ny', country: 'United States', city: 'New York', cc: 'US', coords: [-74.006, 40.7128] },
+  { code: 'us-la', country: 'United States', city: 'Los Angeles', cc: 'US', coords: [-118.2437, 34.0522] },
+  { code: 'us-chi', country: 'United States', city: 'Chicago', cc: 'US', coords: [-87.6298, 41.8781] },
+  { code: 'us-mia', country: 'United States', city: 'Miami', cc: 'US', coords: [-80.1918, 25.7617] },
+  { code: 'us-dal', country: 'United States', city: 'Dallas', cc: 'US', coords: [-96.7970, 32.7767] },
+  { code: 'us-sea', country: 'United States', city: 'Seattle', cc: 'US', coords: [-122.3321, 47.6062] },
+  { code: 'us-sf', country: 'United States', city: 'San Francisco', cc: 'US', coords: [-122.4194, 37.7749] },
+  { code: 'us-atl', country: 'United States', city: 'Atlanta', cc: 'US', coords: [-84.3880, 33.7490] },
+  { code: 'us-den', country: 'United States', city: 'Denver', cc: 'US', coords: [-104.9903, 39.7392] },
+  { code: 'us-wdc', country: 'United States', city: 'Washington DC', cc: 'US', coords: [-77.0369, 38.9072] },
+  { code: 'ca-tor', country: 'Canada', city: 'Toronto', cc: 'CA', coords: [-79.3832, 43.6532] },
+  { code: 'ca-van', country: 'Canada', city: 'Vancouver', cc: 'CA', coords: [-123.1207, 49.2827] },
+  { code: 'ca-mtl', country: 'Canada', city: 'Montreal', cc: 'CA', coords: [-73.5673, 45.5017] },
+  { code: 'mx-mex', country: 'Mexico', city: 'Mexico City', cc: 'MX', coords: [-99.1332, 19.4326] },
+  
   // Europe
-  { id: 'uk-lon', name: 'United Kingdom', city: 'London', countryCode: 'GB', latency: 89, load: 62, coordinates: [-0.1276, 51.5074], premium: false },
-  { id: 'uk-man', name: 'United Kingdom', city: 'Manchester', countryCode: 'GB', latency: 92, load: 58, coordinates: [-2.2426, 53.4808], premium: false },
-  { id: 'fr-par', name: 'France', city: 'Paris', countryCode: 'FR', latency: 95, load: 65, coordinates: [2.3522, 48.8566], premium: false },
-  { id: 'de-ber', name: 'Germany', city: 'Berlin', countryCode: 'DE', latency: 98, load: 55, coordinates: [13.4050, 52.5200], premium: false },
-  { id: 'de-fra', name: 'Germany', city: 'Frankfurt', countryCode: 'DE', latency: 96, load: 70, coordinates: [8.6821, 50.1109], premium: false },
-  { id: 'nl-ams', name: 'Netherlands', city: 'Amsterdam', countryCode: 'NL', latency: 90, load: 75, coordinates: [4.9041, 52.3676], premium: false },
-  { id: 'es-mad', name: 'Spain', city: 'Madrid', countryCode: 'ES', latency: 105, load: 48, coordinates: [-3.7038, 40.4168], premium: false },
-  { id: 'it-rom', name: 'Italy', city: 'Rome', countryCode: 'IT', latency: 110, load: 50, coordinates: [12.4964, 41.9028], premium: false },
-  { id: 'ch-zur', name: 'Switzerland', city: 'Zurich', countryCode: 'CH', latency: 100, load: 35, coordinates: [8.5417, 47.3769], premium: false },
-  { id: 'se-sto', name: 'Sweden', city: 'Stockholm', countryCode: 'SE', latency: 115, load: 40, coordinates: [18.0686, 59.3293], premium: false },
-  { id: 'no-osl', name: 'Norway', city: 'Oslo', countryCode: 'NO', latency: 118, load: 38, coordinates: [10.7522, 59.9139], premium: false },
-  { id: 'pl-war', name: 'Poland', city: 'Warsaw', countryCode: 'PL', latency: 112, load: 45, coordinates: [21.0122, 52.2297], premium: false },
-  { id: 'at-vie', name: 'Austria', city: 'Vienna', countryCode: 'AT', latency: 108, load: 42, coordinates: [16.3738, 48.2082], premium: false },
-  { id: 'be-bru', name: 'Belgium', city: 'Brussels', countryCode: 'BE', latency: 93, load: 52, coordinates: [4.3517, 50.8503], premium: false },
-  { id: 'ie-dub', name: 'Ireland', city: 'Dublin', countryCode: 'IE', latency: 88, load: 46, coordinates: [-6.2603, 53.3498], premium: false },
-  { id: 'pt-lis', name: 'Portugal', city: 'Lisbon', countryCode: 'PT', latency: 102, load: 39, coordinates: [-9.1393, 38.7223], premium: false },
-  { id: 'dk-cop', name: 'Denmark', city: 'Copenhagen', countryCode: 'DK', latency: 106, load: 41, coordinates: [12.5683, 55.6761], premium: false },
-  { id: 'fi-hel', name: 'Finland', city: 'Helsinki', countryCode: 'FI', latency: 120, load: 33, coordinates: [24.9384, 60.1699], premium: false },
-  { id: 'cz-pra', name: 'Czech Republic', city: 'Prague', countryCode: 'CZ', latency: 104, load: 47, coordinates: [14.4378, 50.0755], premium: false },
-  { id: 'hu-bud', name: 'Hungary', city: 'Budapest', countryCode: 'HU', latency: 110, load: 43, coordinates: [19.0402, 47.4979], premium: false },
-  { id: 'ro-buc', name: 'Romania', city: 'Bucharest', countryCode: 'RO', latency: 125, load: 36, coordinates: [26.1025, 44.4268], premium: false },
-  { id: 'bg-sof', name: 'Bulgaria', city: 'Sofia', countryCode: 'BG', latency: 128, load: 30, coordinates: [23.3219, 42.6977], premium: false },
-  { id: 'gr-ath', name: 'Greece', city: 'Athens', countryCode: 'GR', latency: 135, load: 50, coordinates: [23.7275, 37.9838], premium: false },
-  { id: 'ua-kyi', name: 'Ukraine', city: 'Kyiv', countryCode: 'UA', latency: 130, load: 45, coordinates: [30.5238, 50.4501], premium: false },
+  { code: 'uk-lon', country: 'United Kingdom', city: 'London', cc: 'GB', coords: [-0.1276, 51.5074] },
+  { code: 'uk-man', country: 'United Kingdom', city: 'Manchester', cc: 'GB', coords: [-2.2426, 53.4808] },
+  { code: 'fr-par', country: 'France', city: 'Paris', cc: 'FR', coords: [2.3522, 48.8566] },
+  { code: 'de-ber', country: 'Germany', city: 'Berlin', cc: 'DE', coords: [13.4050, 52.5200] },
+  { code: 'de-fra', country: 'Germany', city: 'Frankfurt', cc: 'DE', coords: [8.6821, 50.1109] },
+  { code: 'nl-ams', country: 'Netherlands', city: 'Amsterdam', cc: 'NL', coords: [4.9041, 52.3676] },
+  { code: 'es-mad', country: 'Spain', city: 'Madrid', cc: 'ES', coords: [-3.7038, 40.4168] },
+  { code: 'it-rom', country: 'Italy', city: 'Rome', cc: 'IT', coords: [12.4964, 41.9028] },
+  { code: 'it-mil', country: 'Italy', city: 'Milan', cc: 'IT', coords: [9.1900, 45.4642] },
+  { code: 'ch-zur', country: 'Switzerland', city: 'Zurich', cc: 'CH', coords: [8.5417, 47.3769] },
+  { code: 'se-sto', country: 'Sweden', city: 'Stockholm', cc: 'SE', coords: [18.0686, 59.3293] },
+  { code: 'no-osl', country: 'Norway', city: 'Oslo', cc: 'NO', coords: [10.7522, 59.9139] },
+  { code: 'pl-war', country: 'Poland', city: 'Warsaw', cc: 'PL', coords: [21.0122, 52.2297] },
+  { code: 'ro-buc', country: 'Romania', city: 'Bucharest', cc: 'RO', coords: [26.1025, 44.4268] },
+  { code: 'ua-kyi', country: 'Ukraine', city: 'Kyiv', cc: 'UA', coords: [30.5238, 50.4501] },
+  { code: 'fi-hel', country: 'Finland', city: 'Helsinki', cc: 'FI', coords: [24.9384, 60.1699] },
 
-  // Asia Pacific
-  { id: 'jp-tok', name: 'Japan', city: 'Tokyo', countryCode: 'JP', latency: 150, load: 30, coordinates: [139.6917, 35.6895], premium: false },
-  { id: 'jp-osa', name: 'Japan', city: 'Osaka', countryCode: 'JP', latency: 155, load: 28, coordinates: [135.5023, 34.6937], premium: false },
-  { id: 'kr-seo', name: 'South Korea', city: 'Seoul', countryCode: 'KR', latency: 148, load: 35, coordinates: [126.9780, 37.5665], premium: false },
-  { id: 'sg-sin', name: 'Singapore', city: 'Singapore', countryCode: 'SG', latency: 180, load: 20, coordinates: [103.8198, 1.3521], premium: false },
-  { id: 'hk-hon', name: 'Hong Kong', city: 'Hong Kong', countryCode: 'HK', latency: 165, load: 45, coordinates: [114.1694, 22.3193], premium: false },
-  { id: 'in-mum', name: 'India', city: 'Mumbai', countryCode: 'IN', latency: 190, load: 55, coordinates: [72.8777, 19.0760], premium: false },
-  { id: 'in-ban', name: 'India', city: 'Bangalore', countryCode: 'IN', latency: 195, load: 50, coordinates: [77.5946, 12.9716], premium: false },
-  { id: 'id-jak', name: 'Indonesia', city: 'Jakarta', countryCode: 'ID', latency: 200, load: 60, coordinates: [106.8456, -6.2088], premium: false },
-  { id: 'th-ban', name: 'Thailand', city: 'Bangkok', countryCode: 'TH', latency: 185, load: 40, coordinates: [100.5018, 13.7563], premium: false },
-  { id: 'vn-han', name: 'Vietnam', city: 'Hanoi', countryCode: 'VN', latency: 192, load: 38, coordinates: [105.8342, 21.0278], premium: false },
-  { id: 'tw-tai', name: 'Taiwan', city: 'Taipei', countryCode: 'TW', latency: 168, load: 32, coordinates: [121.5654, 25.0330], premium: false },
-  { id: 'my-kua', name: 'Malaysia', city: 'Kuala Lumpur', countryCode: 'MY', latency: 182, load: 25, coordinates: [101.6869, 3.1390], premium: false },
+  // Asia
+  { code: 'jp-tok', country: 'Japan', city: 'Tokyo', cc: 'JP', coords: [139.6917, 35.6895] },
+  { code: 'jp-osa', country: 'Japan', city: 'Osaka', cc: 'JP', coords: [135.5023, 34.6937] },
+  { code: 'kr-seo', country: 'South Korea', city: 'Seoul', cc: 'KR', coords: [126.9780, 37.5665] },
+  { code: 'sg-sin', country: 'Singapore', city: 'Singapore', cc: 'SG', coords: [103.8198, 1.3521] },
+  { code: 'hk-hon', country: 'Hong Kong', city: 'Hong Kong', cc: 'HK', coords: [114.1694, 22.3193] },
+  { code: 'in-mum', country: 'India', city: 'Mumbai', cc: 'IN', coords: [72.8777, 19.0760] },
+  { code: 'in-del', country: 'India', city: 'New Delhi', cc: 'IN', coords: [77.1025, 28.7041] },
+  { code: 'id-jak', country: 'Indonesia', city: 'Jakarta', cc: 'ID', coords: [106.8456, -6.2088] },
+  { code: 'th-ban', country: 'Thailand', city: 'Bangkok', cc: 'TH', coords: [100.5018, 13.7563] },
+  { code: 'vn-han', country: 'Vietnam', city: 'Hanoi', cc: 'VN', coords: [105.8342, 21.0278] },
+  { code: 'my-kua', country: 'Malaysia', city: 'Kuala Lumpur', cc: 'MY', coords: [101.6869, 3.1390] },
 
   // Oceania
-  { id: 'au-syd', name: 'Australia', city: 'Sydney', countryCode: 'AU', latency: 210, load: 40, coordinates: [151.2093, -33.8688], premium: false },
-  { id: 'au-mel', name: 'Australia', city: 'Melbourne', countryCode: 'AU', latency: 215, load: 38, coordinates: [144.9631, -37.8136], premium: false },
-  { id: 'nz-auc', name: 'New Zealand', city: 'Auckland', countryCode: 'NZ', latency: 220, load: 30, coordinates: [174.7633, -36.8485], premium: false },
+  { code: 'au-syd', country: 'Australia', city: 'Sydney', cc: 'AU', coords: [151.2093, -33.8688] },
+  { code: 'au-mel', country: 'Australia', city: 'Melbourne', cc: 'AU', coords: [144.9631, -37.8136] },
+  { code: 'au-per', country: 'Australia', city: 'Perth', cc: 'AU', coords: [115.8605, -31.9505] },
+  { code: 'nz-auc', country: 'New Zealand', city: 'Auckland', cc: 'NZ', coords: [174.7633, -36.8485] },
 
   // South America
-  { id: 'br-sao', name: 'Brazil', city: 'Sao Paulo', countryCode: 'BR', latency: 140, load: 65, coordinates: [-46.6333, -23.5505], premium: false },
-  { id: 'ar-bue', name: 'Argentina', city: 'Buenos Aires', countryCode: 'AR', latency: 155, load: 50, coordinates: [-58.3816, -34.6037], premium: false },
-  { id: 'cl-san', name: 'Chile', city: 'Santiago', countryCode: 'CL', latency: 160, load: 45, coordinates: [-70.6693, -33.4489], premium: false },
-  { id: 'co-bog', name: 'Colombia', city: 'Bogota', countryCode: 'CO', latency: 130, load: 55, coordinates: [-74.0721, 4.7110], premium: false },
-  { id: 'pe-lim', name: 'Peru', city: 'Lima', countryCode: 'PE', latency: 135, load: 48, coordinates: [-77.0428, -12.0464], premium: false },
+  { code: 'br-sao', country: 'Brazil', city: 'Sao Paulo', cc: 'BR', coords: [-46.6333, -23.5505] },
+  { code: 'br-rio', country: 'Brazil', city: 'Rio de Janeiro', cc: 'BR', coords: [-43.1729, -22.9068] },
+  { code: 'ar-bue', country: 'Argentina', city: 'Buenos Aires', cc: 'AR', coords: [-58.3816, -34.6037] },
+  { code: 'cl-san', country: 'Chile', city: 'Santiago', cc: 'CL', coords: [-70.6693, -33.4489] },
+  { code: 'co-bog', country: 'Colombia', city: 'Bogota', cc: 'CO', coords: [-74.0721, 4.7110] },
+  { code: 'pe-lim', country: 'Peru', city: 'Lima', cc: 'PE', coords: [-77.0428, -12.0464] },
 
-  // Africa & Middle East
-  { id: 'za-joh', name: 'South Africa', city: 'Johannesburg', countryCode: 'ZA', latency: 230, load: 42, coordinates: [28.0473, -26.2041], premium: false },
-  { id: 'eg-cai', name: 'Egypt', city: 'Cairo', countryCode: 'EG', latency: 145, load: 50, coordinates: [31.2357, 30.0444], premium: false },
-  { id: 'ae-dub', name: 'UAE', city: 'Dubai', countryCode: 'AE', latency: 170, load: 35, coordinates: [55.2708, 25.2048], premium: false },
-  { id: 'il-tel', name: 'Israel', city: 'Tel Aviv', countryCode: 'IL', latency: 140, load: 40, coordinates: [34.7818, 32.0853], premium: false },
-  { id: 'tr-ist', name: 'Turkey', city: 'Istanbul', countryCode: 'TR', latency: 130, load: 58, coordinates: [28.9784, 41.0082], premium: false },
+  // Africa / Middle East
+  { code: 'za-joh', country: 'South Africa', city: 'Johannesburg', cc: 'ZA', coords: [28.0473, -26.2041] },
+  { code: 'za-cap', country: 'South Africa', city: 'Cape Town', cc: 'ZA', coords: [18.4241, -33.9249] },
+  { code: 'eg-cai', country: 'Egypt', city: 'Cairo', cc: 'EG', coords: [31.2357, 30.0444] },
+  { code: 'ae-dub', country: 'UAE', city: 'Dubai', cc: 'AE', coords: [55.2708, 25.2048] },
+  { code: 'tr-ist', country: 'Turkey', city: 'Istanbul', cc: 'TR', coords: [28.9784, 41.0082] },
 ];
+
+function generateServerList(targetCount: number): ServerLocation[] {
+  const servers: ServerLocation[] = [...HIGH_SPEED_SERVERS];
+  const remainingCount = targetCount - HIGH_SPEED_SERVERS.length;
+  // Ensure we cycle through cities enough times to hit target
+  const locationsPerCity = Math.ceil(remainingCount / BASE_CITIES.length);
+  
+  BASE_CITIES.forEach(city => {
+    for (let i = 0; i < locationsPerCity; i++) {
+      // Add randomness to stats to make them feel real
+      const load = Math.floor(Math.random() * 85) + 5;
+      
+      // Calculate realistic latency based on region + jitter
+      const baseLatency = city.cc === 'US' ? 30 : city.cc === 'GB' ? 45 : 90;
+      const latencyJitter = Math.floor(Math.random() * 50) - 20;
+      const latency = Math.max(12, baseLatency + latencyJitter + (i * 3)); 
+      
+      servers.push({
+        id: `${city.code}-${i+1}`,
+        name: city.country,
+        city: `${city.city} Proxy #${i+1}`,
+        countryCode: city.cc,
+        latency: latency,
+        load: load,
+        coordinates: [city.coords[0], city.coords[1]], 
+        premium: false 
+      });
+      
+      // Stop exactly at target to avoid going over if division isn't clean
+      if (servers.length >= targetCount) break;
+    }
+  });
+
+  return servers;
+}
+
+// Generate 1000 Servers (including the high speed ones)
+export const SERVER_LOCATIONS: ServerLocation[] = generateServerList(1000);
 
 export const MOCK_IPS = {
   DISCONNECTED: '192.168.0.1 (Exposed)',
   CONNECTED: '104.28.14.92 (Masked)',
 };
+
+export const APP_THEMES = [
+  { id: 'cyan', name: 'Cyber Blue', primary: '#22d3ee', secondary: '#0891b2' },
+  { id: 'emerald', name: 'Hacker Green', primary: '#34d399', secondary: '#059669' },
+  { id: 'violet', name: 'Nebula Purple', primary: '#a78bfa', secondary: '#7c3aed' },
+  { id: 'rose', name: 'Neon Rose', primary: '#fb7185', secondary: '#e11d48' },
+];
